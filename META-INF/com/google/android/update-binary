@@ -43,13 +43,6 @@ ZIPFILE=$3
 
 mount /data 2>/dev/null
 
-if [ $BOOTMODE == "true" ]; then
-  # Load utility functions
-  . /data/adb/magisk/util_functions.sh
-  install_module
-  exit 0
-fi
-
 # Extract utility functions file
 unzip -o "$ZIPFILE" tools/util_functions.sh -d $TMPDIR >&2
 
@@ -58,6 +51,11 @@ unzip -o "$ZIPFILE" tools/busybox -d $TMPDIR >&2
 
 # Load utility functions
 . $TMPDIR/tools/util_functions.sh
+
+if [ $BOOTMODE == "true" ]; then
+  install_module
+  exit 0
+fi
 
 # Preperation for flashable zips
 setup_flashable
