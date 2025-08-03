@@ -29,6 +29,15 @@ else
     export boot="/dev/block/bootdevice/by-name/boot$(getprop ro.boot.slot_suffix)"
 fi
 
+# Get dtbo partition name
+if [ ! -e /dev/block/bootdevice/by-name/dtbo* ]; then
+    export dtbo="null"
+elif test -z "$(getprop ro.boot.slot_suffix)"; then
+    export dtbo="/dev/block/bootdevice/by-name/dtbo"
+else
+    export dtbo="/dev/block/bootdevice/by-name/dtbo$(getprop ro.boot.slot_suffix)"
+fi
+
 # Install Kernel
 chmod +x $MODPATH/tools/*
 export PATH="$MODPATH/tools:$PATH"
@@ -60,8 +69,8 @@ if [ -e $MODPATH/*.dtb ]; then
     ui_print "- DTB detected! Please select:"
     ui_print "- Volume Up: Install DTB (Recommended)"
     ui_print "- Volume Down: Skip install DTB"
-    user_choice=$(Key_monitoring)
-    if [ $user_choice == "volume_up" ]; then
+    user_choice_dtb=$(Key_monitoring)
+    if [ $user_choice_dtb == "volume_up" ]; then
         mv $MODPATH/*.dtb kernel_dtb
     fi
 fi
@@ -69,6 +78,16 @@ ui_print "- Repacking 'Boot' Image..."
 magiskboot repack $MODPATH/boot.img
 ui_print "- Flashing 'Boot' Image..."
 dd if=new-boot.img of=$boot
+if [ -e $MODPATH/dtbo.img ] && [ $dtbo != "null" ]; then
+    ui_print "- dtbo.img detected! Please select:"
+    ui_print "- Volume Up: Install dtbo.img (Recommended)"
+    ui_print "- Volume Down: Skip install dtbo.img"
+    user_choice_dtbo=$(Key_monitoring)
+    if [ $user_choice_dtbo == "volume_up" ]; then
+        ui_print "- Flashing 'Dtbo' Image..."
+        dd if=$MODPATH/dtbo.img of=$dtbo
+    fi
+fi
 ui_print "- Install Successful!"
 
 ui_print " "

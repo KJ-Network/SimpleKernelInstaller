@@ -10,6 +10,7 @@
 ##### Usage:
 * Put your kernel (Image, Image.gz, Image-dtb or Image.gz-dtb) into this package.
 * Put your dtb (*.dtb) into this package (if you have).
+* Put your dtbo (dtbo..img) into this package (if you have).
 * Change The Kernel Name and Device Codename in config.conf
 * Flash it in Recovery(3rd-party recoverys only), Magisk(as a module), KernelSU(as a module) or APatch(as a apm module)!
 ---
