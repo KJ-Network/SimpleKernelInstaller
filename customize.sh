@@ -1,6 +1,9 @@
 # Simple Kernel Installer
 # By KeJia
 
+# Load utility functions
+. $MODPATH/tools/util_functions.sh
+
 # Get Kernel Name and print
 name=$(grep '^name=' $MODPATH/config.conf | cut -d '=' -f 2)
 
@@ -48,7 +51,13 @@ else
     exit 1
 fi
 if [ -e $MODPATH/*.dtb ]; then
-    mv $MODPATH/*.dtb kernel_dtb
+    ui_print "- DTB detected! Please select:"
+    ui_print "- Volume Up: Install DTB (Recommended)"
+    ui_print "- Volume Down: Skip install DTB"
+    user_choice=$(Key_monitoring)
+    if [ $user_choice == "volume_up" ]; then
+        mv $MODPATH/*.dtb kernel_dtb
+    fi
 fi
 ui_print "- Repacking 'Boot' Image..."
 magiskboot repack $MODPATH/boot.img
