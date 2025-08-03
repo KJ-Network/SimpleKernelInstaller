@@ -39,9 +39,15 @@ ui_print "- Unpacking 'Boot' Image..."
 magiskboot unpack $MODPATH/boot.img
 ui_print "- Spliting The Kernel Package And Uploading The Kernel..."
 if [ -e $MODPATH/Image.gz-dtb ]; then
+    mv kernel_dtb kernel_dtb_origin
     magiskboot split $MODPATH/Image.gz-dtb
+    mv kernel_dtb $MODPATH/new.dtb
+    mv kernel_dtb_origin kernel_dtb
 elif [ -e $MODPATH/Image-dtb ]; then
+    mv kernel_dtb kernel_dtb_origin
     magiskboot split $MODPATH/Image-dtb
+    mv kernel_dtb $MODPATH/new.dtb
+    mv kernel_dtb_origin kernel_dtb
 elif [ -e $MODPATH/Image.gz ]; then
     magiskboot decompress $MODPATH/Image.gz kernel
 elif [ -e $MODPATH/Image ]; then
