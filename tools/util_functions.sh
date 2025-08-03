@@ -716,6 +716,30 @@ install_module() {
   ui_print "- Done"
 }
 
+Key_monitoring() {
+    while :; do
+        event_info=$(getevent -qlc 1)
+
+        case "$event_info" in
+            *KEY_VOLUMEUP*) 
+                echo "volume_up"
+                break
+                ;;
+            *KEY_VOLUMEDOWN*) 
+                echo "volume_down"
+                break
+                ;;
+            *KEY_POWER*)
+                echo "power"
+                break
+                ;;
+            *)
+                continue
+                ;;
+        esac
+    done
+}
+
 ##########
 # Presets
 ##########
