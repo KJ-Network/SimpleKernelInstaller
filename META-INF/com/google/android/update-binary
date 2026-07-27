@@ -54,9 +54,6 @@ abort() {
 # Extract files
 unzip "$ZIPFILE" -d $TMPDIR >&2
 
-# Load utility functions
-. $TMPDIR/tools/env_prepare.sh
-
 ##########
 # Install
 ##########
@@ -65,7 +62,7 @@ unzip "$ZIPFILE" -d $TMPDIR >&2
 chmod +x $MODPATH/customize.sh
 
 # Load customization script
-. $MODPATH/customize.sh
+. $TMPDIR/customize.sh
 
 ##############
 # Finalizing
