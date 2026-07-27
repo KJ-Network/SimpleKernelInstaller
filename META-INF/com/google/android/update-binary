@@ -1,38 +1,27 @@
-#!/sbin/sh
+# TWRP/Magisk/KernelFlasher 1st. Environment Preparation For SimpleKernelInstaller
+# By KeJia
 
-#################
-# Initialization
-#################
-
+# flash place check
 BOOTMODE=false;
 ps | grep zygote | grep -v grep >/dev/null && BOOTMODE=true;
 $BOOTMODE || ps -A 2>/dev/null | grep zygote | grep -v grep >/dev/null && BOOTMODE=true;
-
 KERNELFLASHER=false
 if [ -n "$(ps -ef | grep '[b]usybox ash')" ]; then
     KERNELFLASHER=true
 fi
 
+# env prepare
 umask 022
-
-# Global vars
 if $BOOTMODE; then
     TMPDIR=/data/local/tmp/ski
 else
     TMPDIR=/tmp/ski
 fi
-
 rm -rf $TMPDIR 2>/dev/null
 mkdir -p $TMPDIR
 MODPATH=$TMPDIR
-
-##############
-# Environment
-##############
-
 OUTFD=$2
 ZIPFILE=$3
-
 ui_print() {
     if $BOOTMODE && [ $KERNELFLASHER == "false" ]; then
         echo "$1"
@@ -44,31 +33,19 @@ ui_print() {
         done;
     fi
 }
-
 abort() {
   ui_print "$1"
   rm -rf $TMPDIR
   exit 1
 }
 
-# Extract files
+# extract files
 unzip "$ZIPFILE" -d $TMPDIR >&2
 
-##########
-# Install
-##########
-
-# setup permissions
-chmod +x $MODPATH/customize.sh
-
-# Load customization script
+# load main script
 . $TMPDIR/customize.sh
 
-##############
-# Finalizing
-##############
-
+# clean up
 cd /
 rm -rf $TMPDIR
-
 exit 0
